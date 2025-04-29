@@ -1,0 +1,16 @@
+apiVersion: policies.kubewarden.io/v1
+kind: ClusterAdmissionPolicy
+metadata:
+  name: palindrome-label-pod
+spec:
+  module: registry://ghcr.io/cdimonaco/policies/e2e-framework-usage-demo-talk:latest
+  rules:
+  - apiGroups: [""]
+    apiVersions: ["v1"]
+    resources: ["pods"]
+    operations:
+    - CREATE
+    - UPDATE
+  mutating: false
+  settings:
+    allowed_palindromes: ["level"]

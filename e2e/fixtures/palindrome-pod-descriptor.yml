@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: palindrome-pod
+  labels:
+    level: "interview"
+spec:
+  containers:
+    - name: hello
+      image: hello-world:latest

@@ -1,0 +1,22 @@
+name: E2E Cluster test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  e2e-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Download k3d
+        run: curl --silent --fail  https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+      
+      - name: Run e2e cluster tests
+        run: make e2e-tests-cluster

@@ -1,0 +1,36 @@
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+
+name: Release policy
+
+jobs:
+  cancel-previous-runs:
+    name: Cancel previous runs
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+        with:
+          access_token: ${{ github.token }}
+        
+  test:
+    needs: [cancel-previous-runs]
+    uses: kubewarden/github-actions/.github/workflows/reusable-test-policy-go.yml@v3.4.6
+
+  release:
+    needs: test
+    permissions:
+      # Required to create GH releases
+      contents: write
+      # Required to push to GHCR
+      packages: write
+      # Required by cosign keyless signing
+      id-token: write
+
+    uses: kubewarden/github-actions/.github/workflows/reusable-release-policy-go.yml@v3.4.6
+    with:
+      oci-target: ghcr.io/cdimonaco/policies/e2e-framework-usage-demo-talk
